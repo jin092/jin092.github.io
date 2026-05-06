@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>테스타 레이아웃</title>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background-color: #B3DCF3; 
+            font-family: 'Pretendard', sans-serif;
+        }
+
+        /* 왼쪽 고정 사이드바 */
+        .fixed-left-bar {
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 150px; 
+            height: 100vh;
+            background-color: rgba(133, 198, 230, 0.9); 
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding-top: 40px;
+            transition: width 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 0 rgba(0,0,0,0);
+        }
+
+        .fixed-left-bar:hover {
+            width: 250px; 
+            box-shadow: 5px 0 15px rgba(0,0,0,0.2); 
+        }
+
+        .logo {
+            width: 120px; 
+            height: auto;
+            margin-bottom: 30px; 
+            margin-left: 15px;
+            transition: width 0.3s ease; 
+        }
+
+        /* 메뉴 아이템 */
+        .menu-item {
+            position: relative; 
+            display: flex;
+            align-items: center;
+            width: 100%; 
+            margin-top: 20px;
+            cursor: pointer;
+            padding: 10px 0;
+            justify-content: flex-start; 
+            padding-left: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .fixed-left-bar:hover .menu-item {
+            padding-left: 20px;
+        }
+
+        /* 흰색 막대 (인디케이터) */
+        .menu-item::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            width: 8px; 
+            height: 50px; 
+            border-radius: 0 5px 5px 0; 
+            opacity: 0; 
+            background-color: rgba(255, 255, 255, 0.5); 
+            transition: opacity 0.3s ease, width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .fixed-left-bar:hover .menu-item::before {
+            width: calc(100% - 20px);
+        }
+
+        .menu-item:hover::before, 
+        .menu-item.active::before {
+            opacity: 1; 
+        }
+
+        .side-img {
+            width: 50px; 
+            height: 50px; 
+            object-fit: cover;
+            transition: width 0.3s ease;
+        }
+
+        .menu-text {
+            font-weight: bold;
+            color: white;
+            white-space: nowrap;
+            opacity: 0; 
+            width: 0; 
+            overflow: hidden;
+            transition: opacity 0.3s ease, width 0.3s ease, margin-left 0.3s ease;
+        }
+
+        .fixed-left-bar:hover .menu-text {
+            opacity: 1;
+            width: auto;
+            margin-left: 15px; 
+        }
+
+        /* --- 컨텐츠 영역 --- */
+        .container {
+            width: 100%; 
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory; 
+            scroll-behavior: smooth;        
+            scrollbar-width: none;        
+        }
+        
+        .container::-webkit-scrollbar { display: none; }
+
+        .section {
+            height: 100vh;
+            scroll-snap-align: start;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .section:not(:last-child) { margin-bottom: 100px; }
+
+        .단체, .페이지2 { width: 100%; height: 100%; object-fit: cover; }
+
+        .청우 {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            height: 100%;
+            z-index: 10;
+            opacity: 0.9;
+            transition: opacity 0.3s ease; 
+        }
+
+        .fade-out { opacity: 0; }
+
+        .bg-img-3 { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+
+        /* 다이아몬드 그리드 */
+        .diamond-grid { position: absolute; z-index: 20; display: grid; grid-template-columns: repeat(6, 1fr); gap: 50px; width: 35%; left: 32%; transform: translateX(-50%) translateY(80px); cursor: pointer; }
+        .diamond-item { width: 150px; height: 150px; transform: rotate(45deg); overflow: hidden; display: flex; justify-content: center; align-items: center; background-color: white; margin-left: -40px; margin-right: -40px; }
+        .diamond-item img { width: 140%; transform: rotate(-45deg); object-fit: cover; }
+        .diamond-item:nth-child(1) { grid-column: 2 / span 2; }
+        .diamond-item:nth-child(2) { grid-column: 4 / span 2; }
+        .diamond-item:nth-child(3) { grid-column: 1 / span 2; }
+        .diamond-item:nth-child(4) { grid-column: 3 / span 2; }
+        .diamond-item:nth-child(5) { grid-column: 5 / span 2; }
+        .diamond-item:nth-child(6) { grid-column: 2 / span 2; }
+        .diamond-item:nth-child(7) { grid-column: 4 / span 2; }
+
+        /* 그리드 컨테이너 */
+        .grid-container { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; width: 60%; padding: 20px; margin: 0 auto; z-index: 2; position: relative; transform: translateX(120px) translateY(100px); }
+        .grid-item { width: 100%; display: flex; justify-content: center; align-items: center; }
+        .grid-item img { width: 50%; height: auto; object-fit: contain; display: block; }
+        .grid-item:nth-child(1), .grid-item:nth-child(2), .grid-item:nth-child(3) { grid-column: span 2; }
+        .grid-item:nth-child(4) { grid-column: 2 / span 2; }
+        .grid-item:nth-child(5) { grid-column: 4 / span 2; }
+        .grid-item:nth-child(6), .grid-item:nth-child(7), .grid-item:nth-child(8) { grid-column: span 2; }
+    </style>
+</head>
+<body>
+
+    <div class="fixed-left-bar">
+        <img src="웹디/테스타_로고.png" alt="로고" class="logo">
+        
+        <div class="menu-item">
+            <img src="웹디/테스타_로고.png" alt="이미지1" class="side-img">
+            <span class="menu-text">홈</span>
+        </div>
+        <div class="menu-item">
+            <img src="웹디/테스타.png" alt="이미지2" class="side-img">
+            <span class="menu-text">멤버</span>
+        </div>
+        <div class="menu-item">
+            <img src="웹디/음악.png" alt="이미지3" class="side-img">
+            <span class="menu-text">앨범</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <section class="section">
+            <img src="웹디/테스타_단체.png" alt="단체 사진" class="단체">
+        </section>
+        <section class="section">
+            <img src="웹디/테스_바탕.png" alt="배경" class="페이지2">
+            <img src="웹디/테스타_개인_바탕_청우.png" alt="캐릭터" class="청우" id="character-display">
+            <div class="diamond-grid">
+                <div class="diamond-item" data-src="웹디/테스타_개인_바탕_배세.png"><img src="웹디/테스타_개인_배세.png" alt="1"></div>
+                <div class="diamond-item" data-src="웹디/테스타_개인_바탕_청우.png"><img src="웹디/테스타_개인_청우.png" alt="2"></div>
+                <div class="diamond-item" data-src="웹디/테스타_개인_바탕_아현.png"><img src="웹디/테스타_개인_아현.png" alt="3"></div>
+                <div class="diamond-item" data-src="웹디/테스타_개인_바탕_큰세.png"><img src="웹디/테스타_개인_큰세.png" alt="4"></div>
+                <div class="diamond-item" data-src="웹디/테스타_개인_바탕_문대.png"><img src="웹디/테스타_개인_문대.png" alt="5"></div>
+                <div class="diamond-item" data-src="웹디/테스타_개인_바탕_유진.png"><img src="웹디/테스타_개인_유진.png" alt="6"></div>
+                <div class="diamond-item" data-src="웹디/테스타_개인_바탕_래빈.png"><img src="웹디/테스타_개인_래빈.png" alt="7"></div>
+            </div>
+        </section>
+        <section class="section">
+            <img src="웹디/테스타_책표지.png" alt="3페이지 배경" class="bg-img-3">
+            <div class="grid-container">
+                <div class="grid-item"><img src="웹디/마법소년 1.png" alt="1"></div>
+                <div class="grid-item"><img src="웹디/앨범1.png" alt="2"></div>
+                <div class="grid-item"><img src="웹디/앨범2.png" alt="3"></div>
+                <div class="grid-item"><img src="웹디/앨범3.png" alt="4"></div>
+                <div class="grid-item"><img src="웹디/앨범4.png" alt="5"></div>
+                <div class="grid-item"><img src="웹디/앨범5.png" alt="6"></div>
+                <div class="grid-item"><img src="웹디/앨범6.png" alt="7"></div>
+                <div class="grid-item"><img src="웹디/앨범7.png" alt="8"></div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const sections = document.querySelectorAll('.section');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const container = document.querySelector('.container');
+
+        // 1. 스크롤 감지 및 메뉴 활성화
+        const observerOptions = { root: container, threshold: 0.6 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const index = Array.from(sections).indexOf(entry.target);
+                    menuItems.forEach(item => item.classList.remove('active'));
+                    if (menuItems[index]) menuItems[index].classList.add('active');
+                }
+            });
+        }, observerOptions);
+        sections.forEach(section => observer.observe(section));
+
+        // 2. 메뉴 클릭 시 페이지 이동 (추가된 기능)
+        menuItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                if (sections[index]) {
+                    sections[index].scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // 3. 캐릭터 이미지 교체 기능
+        const characterImg = document.getElementById('character-display');
+        const diamondItems = document.querySelectorAll('.diamond-item');
+        diamondItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const newSrc = item.getAttribute('data-src');
+                characterImg.classList.add('fade-out');
+                setTimeout(() => {
+                    characterImg.src = newSrc;
+                    characterImg.classList.remove('fade-out');
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>
